@@ -51,11 +51,11 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
     return filesize(size);
   }, []);
 
-  const formatDuration = useCallback((seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.round(seconds % 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  }, []);
+  // const formatDuration = useCallback((seconds: number) => {
+  //   const minutes = Math.floor(seconds / 60);
+  //   const remainingSeconds = Math.round(seconds % 60);
+  //   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  // }, []);
 
   const compressionPercentage = Math.round(
     (1 - Number(video.compressedSize) / Number(video.originalSize)) * 100
@@ -98,10 +98,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
             className="w-full h-full object-cover"
           />
         )}
-        <div className="absolute bottom-2 right-2 bg-base-100 bg-opacity-70 px-2 py-1 rounded-lg text-sm flex items-center">
+        {/* <div className="absolute bottom-2 right-2 bg-base-100 bg-opacity-70 px-2 py-1 rounded-lg text-sm flex items-center">
           <Clock size={16} className="mr-1" />
           {formatDuration(video.duration)}
-        </div>
+        </div> */}
       </figure>
       <div className="card-body p-4">
         <h2 className="card-title text-lg font-bold">{video.title}</h2>

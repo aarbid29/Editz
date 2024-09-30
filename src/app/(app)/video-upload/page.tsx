@@ -30,8 +30,15 @@ function VideoUpload() {
     formData.append("originalSize", file.size.toString());
 
     try {
-      const response = await axios.post("/api/video-upload", formData);
-      router.push("/");
+      // const response = await axios.post("/api/video-upload", formData);
+      // router.push("/");
+      const response = await fetch("/api/video-uploadz", {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log("Upload Response:", response);
+      if (!response.ok) throw new Error("Failed to upload one video");
     } catch (error) {
       console.log(error);
     } finally {
