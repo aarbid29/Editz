@@ -20,10 +20,6 @@ export default function SizeEdit() {
   const [isTransforming, setIsTransforming] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  console.log("Uploaded Image:", uploadedImage);
-  console.log("Is Uploading:", isUploading);
-  console.log("Is Transforming:", isTransforming);
-
   useEffect(() => {
     if (uploadedImage) {
       setIsTransforming(true);
