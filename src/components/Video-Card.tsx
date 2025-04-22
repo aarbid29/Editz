@@ -13,6 +13,7 @@ interface VideoCardProps {
   onDownload: (url: string, title: string) => void;
 }
 
+// react funcitonal component of type videocardprop in return
 const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [previewError, setPreviewError] = useState(false);
@@ -77,11 +78,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
     >
       <figure className="aspect-video relative">
         {isHovered ? (
+          //i.e when error
           previewError ? (
             <div className="w-full h-full flex items-center justify-center bg-gray-200">
               <p className="text-red-500">Preview not available</p>
             </div>
           ) : (
+            //when no error but preview
             <video
               src={getPreviewVideoUrl(video.publicId)}
               autoPlay
@@ -92,16 +95,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
             />
           )
         ) : (
+          //else just show thumbnail
           <img
             src={getThumbnailUrl(video.publicId)}
             alt={video.title}
             className="w-full h-full object-cover"
           />
         )}
-        {/* <div className="absolute bottom-2 right-2 bg-base-100 bg-opacity-70 px-2 py-1 rounded-lg text-sm flex items-center">
-          <Clock size={16} className="mr-1" />
-          {formatDuration(video.duration)}
-        </div> */}
       </figure>
       <div className="card-body p-4">
         <h2 className="card-title text-lg font-bold">{video.title}</h2>
@@ -140,7 +140,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
           >
             <Download size={16} />
           </button>{" "}
-          {/* Fixed the missing closing tag */}
         </div>
       </div>
     </div>

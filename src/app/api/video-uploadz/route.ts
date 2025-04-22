@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// Configuration
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
@@ -13,8 +12,6 @@ cloudinary.config({
 
 interface CloudinaryUploadResult {
   public_id: string;
-  bytes: number;
-  // duration?: number;
   [key: string]: any;
 }
 
@@ -33,7 +30,6 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Using a promise to handle the upload
     const result = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -54,7 +50,6 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Create the video record in your database
     const video = await prisma.video.create({
       data: {
         title,
@@ -66,12 +61,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Return the video object as a JSON response
+    // return video object as json req
     return NextResponse.json(video);
   } catch (error) {
     console.error("Upload video failed", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });
   } finally {
-    await prisma.$disconnect(); // Ensure Prisma client disconnects
+    await prisma.$disconnect();
   }
 }
