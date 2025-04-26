@@ -50,6 +50,8 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    const publicId = result.public_id;
+
     const video = await prisma.video.create({
       data: {
         title,
@@ -61,8 +63,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    const videos = await prisma.video.findMany({
+      where: { publicId: result.public_id },
+    });
+
     // return video object as json req
-    return NextResponse.json(video);
+    return NextResponse.json(videos);
   } catch (error) {
     console.error("Upload video failed", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });

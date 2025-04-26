@@ -5,9 +5,9 @@ const prisma = new PrismaClient(); // to interact with models created // connect
 
 export async function GET(request: NextRequest) {
   try {
-    ``;
     const videos = await prisma.video.findMany({
       orderBy: { createdAt: "desc" },
+      // take: 1,
     });
 
     return NextResponse.json(videos);

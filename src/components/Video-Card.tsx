@@ -4,12 +4,12 @@ import { Download, Clock, FileDown, FileUp } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { filesize } from "filesize";
-import { Video } from "@/types";
+import { Videos } from "@/types";
 
 dayjs.extend(relativeTime);
 
 interface VideoCardProps {
-  video: Video;
+  video: Videos;
   onDownload: (url: string, title: string) => void;
 }
 
@@ -52,12 +52,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
     return filesize(size);
   }, []);
 
-  // const formatDuration = useCallback((seconds: number) => {
-  //   const minutes = Math.floor(seconds / 60);
-  //   const remainingSeconds = Math.round(seconds % 60);
-  //   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  // }, []);
-
   const compressionPercentage = Math.round(
     (1 - Number(video.compressedSize) / Number(video.originalSize)) * 100
   );
@@ -72,7 +66,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
 
   return (
     <div
-      className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300"
+      className=" card bg-base-100 shadow-md hover:shadow-2xl hover:scale-[1.02] transform transition-transform duration-300 border border-gray-300 rounded-xl hover:border-gray-400"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -103,7 +97,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
           />
         )}
       </figure>
-      <div className="card-body p-4">
+      <div className="card-body p-4 ">
         <h2 className="card-title text-lg font-bold">{video.title}</h2>
         <p className="text-sm text-base-content opacity-70 mb-4">
           {video.description}
@@ -133,7 +127,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
             <span className="text-accent">{compressionPercentage}%</span>
           </div>
           <button
-            className="btn btn-primary btn-sm"
+            className="btn btn-purple-400 btn-sm"
             onClick={() =>
               onDownload(getFullVideoUrl(video.publicId), video.title)
             }

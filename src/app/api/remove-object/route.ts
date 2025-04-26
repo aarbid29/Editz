@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { auth } from "@clerk/nextjs/server";
 
-// Configuration
+// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
@@ -15,6 +15,7 @@ interface CloudinaryUploadResult {
 }
 
 export async function POST(request: NextRequest) {
+  console.log("Received POST request to /api/remove-object");
   const { userId } = auth();
 
   if (!userId) {
@@ -22,48 +23,46 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // console.log(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
     const formData = await request.formData();
-    console.log(formData);
     const file = formData.get("file");
+    let prompt = formData.get("prompt");
 
-    if (!file || !(file instanceof File)) {
-      return NextResponse.json(
-        { error: "File not found or invalid" },
-        { status: 400 }
-      );
-    }
+    // Sanitize the prompt to remove unsafe characters
+    const sanitizedPrompt = prompt.replace(/[^a-zA-Z0-9-_]/g, "-");
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const buffer = Buffer.from(await file.arrayBuffer());
 
     const result = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "Image-uploads" },
+          {
+            transformation: [
+              {
+                effect: `gen_remove:${sanitizedPrompt}`,
+              },
+            ],
+          },
           (error: any, result: any) => {
             if (error) {
-              console.error("Cloudinary upload error:", error);
+              console.error("Cloudinary transformation error:", error);
               reject(error);
             } else {
               resolve(result as CloudinaryUploadResult);
             }
           }
         );
+
         uploadStream.end(buffer);
       }
     );
+    console.log(result);
 
-    return NextResponse.json(
-      {
-        publicId: result.public_id,
-      },
-      {
-        status: 200,
-      }
-    );
+    return NextResponse.json({ publicId: result.public_id }, { status: 200 });
   } catch (error) {
-    console.error("Upload image failed:", error);
-    return NextResponse.json({ error: "Upload image failed" }, { status: 500 });
+    console.error("Image processing failed:", error);
+    return NextResponse.json(
+      { error: "Image processing failed" },
+      { status: 500 }
+    );
   }
 }

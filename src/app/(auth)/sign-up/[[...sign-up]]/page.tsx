@@ -1,5 +1,16 @@
+"use client";
 import { SignUp } from "@clerk/nextjs";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default function Page() {
-  return <SignUp />;
+  return (
+    <>
+      <Header />
+      <div className="flex items-center justify-center min-h-screen">
+        <SignUp />
+      </div>
+      <Footer />
+    </>
+  );
 }
