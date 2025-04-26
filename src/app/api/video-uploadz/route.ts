@@ -14,6 +14,7 @@ cloudinary.config({
 
 interface CloudinaryUploadResult {
   public_id: string;
+  bytes: number;
   [key: string]: any;
 }
 
@@ -23,7 +24,10 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file");
 
     if (!file || !(file instanceof Blob)) {
-      return NextResponse.json({ error: "Invalid file" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid file upload" },
+        { status: 400 }
+      );
     }
 
     const title = formData.get("title") as string;
@@ -33,7 +37,7 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const result = await new Promise<CloudinaryUploadResult>(
+    const uploadResult = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
@@ -41,7 +45,7 @@ export async function POST(request: NextRequest) {
             folder: "video-uploads",
             transformation: [{ quality: "auto", fetch_format: "mp4" }],
           },
-          (error: any, result: any) => {
+          (error, result) => {
             if (error) reject(error);
             else resolve(result as CloudinaryUploadResult);
           }
@@ -50,21 +54,19 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const publicId = result.public_id;
-
     const video = await prisma.video.create({
       data: {
         title,
         description,
-        publicId: publicId,
+        publicId: uploadResult.public_id,
         originalSize: originalSize,
-        compressedSize: String(result.bytes),
+        compressedSize: String(uploadResult.bytes),
       },
     });
 
     return NextResponse.json(video);
   } catch (error) {
-    console.error("Upload video failed", error);
+    console.error("Upload video failed:", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
