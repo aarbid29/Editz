@@ -20,17 +20,19 @@ interface CloudinaryUploadResult {
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get("file") as File | null;
+    const file = formData.get("file");
+
+    if (!file || !(file instanceof Blob)) {
+      return NextResponse.json({ error: "Invalid file" }, { status: 400 });
+    }
+
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const originalSize = formData.get("originalSize") as string;
 
-    if (!file) {
-      return NextResponse.json({ error: "File not found" }, { status: 400 });
-    }
-
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+
     const result = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -40,11 +42,8 @@ export async function POST(request: NextRequest) {
             transformation: [{ quality: "auto", fetch_format: "mp4" }],
           },
           (error: any, result: any) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result as CloudinaryUploadResult);
-            }
+            if (error) reject(error);
+            else resolve(result as CloudinaryUploadResult);
           }
         );
         uploadStream.end(buffer);
@@ -63,11 +62,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const videos = await prisma.video.findMany({
-      where: { publicId: publicId },
-    });
-
-    return NextResponse.json(videos);
+    return NextResponse.json(video);
   } catch (error) {
     console.error("Upload video failed", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });
