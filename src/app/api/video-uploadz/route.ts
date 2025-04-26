@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { PrismaClient } from "@prisma/client";
 
+export const runtime = "nodejs"; // <----- ADD THIS LINE ✅
+
 const prisma = new PrismaClient();
 
 cloudinary.config({
@@ -28,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const buffer = Buffer.from(bytes); // Now OK because we told Next.js it's Node.js
 
     const result = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
@@ -56,18 +58,16 @@ export async function POST(request: NextRequest) {
       data: {
         title,
         description,
-        publicId: result.public_id,
+        publicId: publicId,
         originalSize: originalSize,
         compressedSize: String(result.bytes),
-        // duration: result.duration || 0,
       },
     });
 
     const videos = await prisma.video.findMany({
-      where: { publicId: result.public_id },
+      where: { publicId: publicId },
     });
 
-    // return video object as json req
     return NextResponse.json(videos);
   } catch (error) {
     console.error("Upload video failed", error);
