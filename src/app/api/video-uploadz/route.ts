@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { PrismaClient } from "@prisma/client";
 
-export const runtime = "nodejs"; // <----- ADD THIS LINE ✅
+export const runtime = "nodejs";
 
 const prisma = new PrismaClient();
 
@@ -30,8 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes); // Now OK because we told Next.js it's Node.js
-
+    const buffer = Buffer.from(bytes);
     const result = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
