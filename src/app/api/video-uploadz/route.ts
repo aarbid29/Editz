@@ -1,12 +1,10 @@
-export const runtime = "nodejs"; // important for Prisma + Node APIs
+export const runtime = "nodejs"; // ensure Node.js runtime for Prisma
 
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { PrismaClient } from "@prisma/client";
 
-// Prisma singleton to avoid multiple instances in dev (serverless)
 declare global {
-  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
@@ -46,11 +44,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing title" }, { status: 400 });
     }
 
-    // Convert Blob to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Upload to Cloudinary using upload_stream
     const result: CloudinaryUploadResult = await new Promise(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -59,7 +55,7 @@ export async function POST(request: NextRequest) {
             folder: "video-uploads",
             transformation: [{ quality: "auto", fetch_format: "mp4" }],
           },
-          (error, result) => {
+          (error: any, result: any) => {
             if (error) reject(error);
             else resolve(result as CloudinaryUploadResult);
           }
@@ -68,7 +64,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Save video metadata to database
+    // Store video metadata in the database
     const video = await prisma.video.create({
       data: {
         title,
@@ -76,7 +72,7 @@ export async function POST(request: NextRequest) {
         publicId: result.public_id,
         originalSize: originalSize ?? "",
         compressedSize: result.bytes ? String(result.bytes) : "",
-        // duration: result.duration ?? 0, // optionally save duration if available
+        // duration: result.duration ?? 0, // optionally store duration
       },
     });
 
@@ -84,8 +80,5 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Upload video failed:", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });
-  } finally {
-    // Do NOT disconnect Prisma here in serverless env
-    // await prisma.$disconnect();
   }
 }
