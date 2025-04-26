@@ -1,4 +1,4 @@
-export const runtime = "nodejs"; // ensure Node.js runtime for Prisma
+export const runtime = "nodejs"; 
 
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Store video metadata in the database
+ 
     const video = await prisma.video.create({
       data: {
         title,
@@ -75,8 +75,11 @@ export async function POST(request: NextRequest) {
         // duration: result.duration ?? 0, // optionally store duration
       },
     });
+        const videos = await prisma.video.findMany({
+      where: { publicId: result.public_id },
+    });
 
-    return NextResponse.json(video);
+    return NextResponse.json(videos);
   } catch (error) {
     console.error("Upload video failed:", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });
