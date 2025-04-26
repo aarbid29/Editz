@@ -28,14 +28,26 @@ export async function POST(request: NextRequest) {
     const prompt = formData.get("prompt");
     const color = formData.get("color");
 
-    if (!file || typeof prompt !== "string" || typeof color !== "string") {
+    if (!(file instanceof File)) {
       return NextResponse.json(
-        { error: "Missing file, prompt or color" },
+        { error: "Invalid or missing file" },
         { status: 400 }
       );
     }
 
-    // Sanitize prompt and color: allow alphanumeric, dash, underscore, comma, semicolon
+    if (typeof prompt !== "string" || prompt.trim() === "") {
+      return NextResponse.json(
+        { error: "Invalid or missing prompt" },
+        { status: 400 }
+      );
+    }
+    if (typeof color !== "string" || color.trim() === "") {
+      return NextResponse.json(
+        { error: "Invalid or missing color" },
+        { status: 400 }
+      );
+    }
+
     const sanitizedPrompt = prompt.replace(/[^a-zA-Z0-9-_,; ]/g, "-").trim();
     const sanitizedColor = color.replace(/[^a-zA-Z0-9#]/g, "").trim();
 

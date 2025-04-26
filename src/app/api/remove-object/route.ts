@@ -25,11 +25,25 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
-    let prompt = formData.get("prompt");
+    const prompt = formData.get("prompt");
 
-    // Sanitize the prompt to remove unsafe characters
+    if (!(file instanceof File)) {
+      return NextResponse.json(
+        { error: "Invalid or missing file" },
+        { status: 400 }
+      );
+    }
+
+    if (typeof prompt !== "string" || prompt.trim() === "") {
+      return NextResponse.json(
+        { error: "Invalid or missing prompt" },
+        { status: 400 }
+      );
+    }
+
     const sanitizedPrompt = prompt.replace(/[^a-zA-Z0-9-_]/g, "-");
 
+    // Convert file to buffer
     const buffer = Buffer.from(await file.arrayBuffer());
 
     const result = await new Promise<CloudinaryUploadResult>(
@@ -55,6 +69,7 @@ export async function POST(request: NextRequest) {
         uploadStream.end(buffer);
       }
     );
+
     console.log(result);
 
     return NextResponse.json({ publicId: result.public_id }, { status: 200 });
