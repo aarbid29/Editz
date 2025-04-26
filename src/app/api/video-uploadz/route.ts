@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { PrismaClient } from "@prisma/client";
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
-const prisma = global.prisma ?? new PrismaClient();
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+const prisma = new PrismaClient();
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -16,39 +12,19 @@ cloudinary.config({
 
 interface CloudinaryUploadResult {
   public_id: string;
-  bytes?: number;
   [key: string]: any;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+    const file = formData.get("file") as File | null;
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const originalSize = formData.get("originalSize") as string;
 
-    const file = formData.get("file");
-    const title = formData.get("title");
-    const description = formData.get("description");
-    const originalSize = formData.get("originalSize");
-
-    if (!(file instanceof File)) {
-      return NextResponse.json(
-        { error: "File not found or invalid" },
-        { status: 400 }
-      );
-    }
-    if (typeof title !== "string" || title.trim() === "") {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
-    }
-    if (typeof description !== "string" || description.trim() === "") {
-      return NextResponse.json(
-        { error: "Description is required" },
-        { status: 400 }
-      );
-    }
-    if (typeof originalSize !== "string" || originalSize.trim() === "") {
-      return NextResponse.json(
-        { error: "Original size is required" },
-        { status: 400 }
-      );
+    if (!file) {
+      return NextResponse.json({ error: "File not found" }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
@@ -74,20 +50,29 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    const publicId = result.public_id;
+
     const video = await prisma.video.create({
       data: {
-        title: title.trim(),
-        description: description.trim(),
+        title,
+        description,
         publicId: result.public_id,
-        originalSize: originalSize.trim(),
-        compressedSize: result.bytes ? String(result.bytes) : "unknown",
+        originalSize: originalSize,
+        compressedSize: String(result.bytes),
         // duration: result.duration || 0,
       },
     });
 
-    return NextResponse.json(video);
+    const videos = await prisma.video.findMany({
+      where: { publicId: result.public_id },
+    });
+
+    // return video object as json req
+    return NextResponse.json(videos);
   } catch (error) {
     console.error("Upload video failed", error);
     return NextResponse.json({ error: "Upload video failed" }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }
