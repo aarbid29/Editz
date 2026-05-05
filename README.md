@@ -17,13 +17,27 @@
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js%2014-black?style=flat-square&logo=next.js&logoColor=white"/>
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=flat-square&logo=cloudinary&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Clerk-6C47FF?style=flat-square&logo=clerk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"/>
+  <a href="https://nextjs.org/">
+    <img src="https://img.shields.io/badge/Next.js%2014-black?style=flat-square&logo=next.js&logoColor=white"/>
+  </a>
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/>
+  </a>
+  <a href="https://cloudinary.com/">
+    <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=flat-square&logo=cloudinary&logoColor=white"/>
+  </a>
+  <a href="https://clerk.com/">
+    <img src="https://img.shields.io/badge/Clerk-6C47FF?style=flat-square&logo=clerk&logoColor=white"/>
+  </a>
+  <a href="https://www.prisma.io/">
+    <img src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white"/>
+  </a>
+  <a href="https://www.postgresql.org/">
+    <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white"/>
+  </a>
+  <a href="https://tailwindcss.com/">
+    <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"/>
+  </a>
 </p>
 
 </div>
