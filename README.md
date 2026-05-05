@@ -135,39 +135,7 @@ VideoCard renders:
 
 ---
 
-## Project Structure
 
-```
-editz/
-├── src/
-│   ├── app/
-│   │   ├── (app)/                      # Protected app routes
-│   │   │   ├── object-removal/         # Gen-AI object eraser
-│   │   │   ├── object-recoloring/      # Gen-AI color replacement
-│   │   │   ├── background-removal/     # Background stripper
-│   │   │   ├── aspect-ratio-change/    # Smart crop + resize
-│   │   │   ├── video-compression/      # Video upload + compress
-│   │   │   └── home/                   # Video gallery
-│   │   ├── (auth)/                     # Sign-in / Sign-up pages
-│   │   └── api/
-│   │       ├── image-upload/           # Generic image upload route
-│   │       ├── remove-object/          # AI object removal
-│   │       ├── replace-color/          # AI object recoloring
-│   │       ├── video-uploadz/          # Video upload + Prisma write
-│   │       └── videos/                 # Fetch all videos
-│   ├── components/
-│   │   ├── Video-Card.tsx              # Thumbnail/preview/download card
-│   │   ├── Gallery.tsx                 # Static example gallery
-│   │   ├── ToolsSection.tsx            # Tool cards with routing
-│   │   ├── header.tsx / footer.tsx
-│   │   └── hero.tsx
-│   ├── lib/
-│   │   └── prisma.ts                   # Prisma client singleton
-│   ├── types/index.ts                  # Shared TypeScript interfaces
-│   └── middleware.ts                   # Clerk auth middleware
-└── prisma/
-    └── schema.prisma                   # Video model definition
-```
 
 ---
 
