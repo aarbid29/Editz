@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://algo-arena-livid.vercel.app/">
+  <a href="https://editz.vercel.app/">
     <img src="https://img.shields.io/badge/Live%20Demo-▶%20View%20App-a855f7?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo"/>
   </a>
 </p>
@@ -42,12 +42,12 @@ Users can remove objects from photos using a text prompt, strip backgrounds in o
 
 | Feature | Description |
 |---|---|
-| 🧹 **Object Removal** | Type what you want removed (e.g. "car", "person") — Cloudinary's generative AI erases it and fills in the background |
-| 🎨 **Object Recoloring** | Specify an object and a target color — AI repaints it while preserving texture and lighting |
-| ✂️ **Background Removal** | Isolate any subject from its background with a single click |
-| 📐 **Aspect Ratio Change** | Crop images to exact dimensions for Instagram, Twitter, LinkedIn banners, and more — with AI-powered smart gravity |
-| 🎬 **Video Compression** | Upload a video and get a compressed MP4 back — with original vs. compressed size comparison and compression percentage |
-| 📦 **Video Gallery** | Browse and replay all uploaded videos with hover-to-preview, thumbnails, and download |
+|  **Object Removal** | Type what you want removed (e.g. "car", "person") — Cloudinary's generative AI erases it and fills in the background |
+|  **Object Recoloring** | Specify an object and a target color — AI repaints it while preserving texture and lighting |
+|  **Background Removal** | Isolate any subject from its background with a single click |
+|  **Aspect Ratio Change** | Crop images to exact dimensions for Instagram, Twitter, LinkedIn banners, and more — with AI-powered smart gravity |
+|  **Video Compression** | Upload a video and get a compressed MP4 back — with original vs. compressed size comparison and compression percentage |
+|  **Video Gallery** | Browse and replay all uploaded videos with hover-to-preview, thumbnails, and download |
 
 ---
 
@@ -243,6 +243,6 @@ MIT © [aarbid29](https://github.com/aarbid29)
 <div align="center">
   <p>Built with Next.js · Cloudinary · Clerk · Prisma</p>
   <p>
-    <a href="https://github.com/aarbid29/Editz">⭐ Star this repo if you found it useful</a>
+    <a href="https://github.com/aarbid29/Editz"> Star this repo if you found it useful</a>
   </p>
 </div>
