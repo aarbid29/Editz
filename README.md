@@ -68,20 +68,20 @@ Users can remove objects from photos using a text prompt, strip backgrounds in o
 ## Tech Stack
 
 ### Frontend
-- **Next.js 14** — App Router, Server Components, API Routes
-- **TypeScript** — end-to-end type safety
-- **Tailwind CSS + DaisyUI** — utility-first styling
-- **next-cloudinary** — `<CldImage>` for URL-based transformations rendered via Cloudinary CDN
+- **Next.js 14** : App Router, Server Components, API Routes
+- **TypeScript** : end-to-end type safety
+- **Tailwind CSS + DaisyUI** : utility-first styling
+- **next-cloudinary** : `<CldImage>` for URL-based transformations rendered via Cloudinary CDN
 
 ### Backend
-- **Next.js API Routes** — serverless handlers for all upload and transformation logic
-- **Cloudinary Node SDK** — streams raw file buffers directly to Cloudinary, applies AI transformations at upload time
-- **Prisma ORM** — type-safe database client
-- **PostgreSQL** — persists video metadata (title, publicId, original/compressed sizes)
+- **Next.js API Routes** : serverless handlers for all upload and transformation logic
+- **Cloudinary Node SDK** : streams raw file buffers directly to Cloudinary, applies AI transformations at upload time
+- **Prisma ORM** : type-safe database client
+- **PostgreSQL** : persists video metadata (title, publicId, original/compressed sizes)
 
 ### Auth & Infrastructure
-- **Clerk** — authentication with middleware-level route protection
-- **Vercel** — deployment and edge functions
+- **Clerk** : authentication with middleware-level route protection
+- **Vercel** : deployment and edge functions
 
 ---
 
@@ -172,15 +172,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Key Design Decisions
 
-**Cloudinary as the transformation engine** — Rather than running image processing on the server (sharp, ffmpeg, etc.), all transformations are delegated to Cloudinary's CDN. This means zero compute cost on the Next.js server and automatic CDN caching of every transformation result.
-
-**Server-side upload proxy** — The browser always POSTs to a Next.js API route, never to Cloudinary directly. This keeps the `api_secret` off the client and allows adding auth checks, rate limiting, and validation before any data reaches Cloudinary.
-
-**URL-based rendering** — For non-AI transformations (crop, resize, background removal), no server round-trip is needed after the initial upload. `<CldImage>` builds a transformation URL from props, and Cloudinary's CDN handles the rest. Changing the selected aspect ratio just re-renders the component with new dimensions — it's a new URL, not a new API call.
-
-**Prisma only for videos** — Images are ephemeral by design. The publicId is held in React state for the session. Videos get persisted because the gallery page needs to list them later with metadata.
 
 ---
 
