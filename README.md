@@ -88,50 +88,19 @@ Users can remove objects from photos using a text prompt, strip backgrounds in o
 ## How It Works
 
 ### Image Transformation Flow
+<img width="1408" height="768" alt="Gemini_Generated_Image_pwp8q5pwp8q5pwp8" src="https://github.com/user-attachments/assets/54e1bec3-1f29-4155-bc6d-81cfc3143c27" />
+
 
 The browser never talks to Cloudinary directly. All uploads go through a Next.js API route that holds the Cloudinary secret server-side.
 
-```
-User selects file
-      ↓
-Browser → POST /api/image-upload (FormData)
-      ↓
-API Route: File → ArrayBuffer → Node Buffer → cloudinary.upload_stream()
-      ↓
-Cloudinary stores image, returns { public_id }
-      ↓
-Browser receives publicId, stores in React state
-      ↓
-<CldImage src={publicId} crop="fill" gravity="auto" removeBackground />
-      ↓
-next-cloudinary builds URL:
-  https://res.cloudinary.com/{cloud}/image/upload/
-    c_fill,g_auto,w_1080,h_1080/e_background_removal/{publicId}
-      ↓
-Cloudinary CDN processes + caches the transformation
-Browser renders the result
-```
 
 For AI tools (object removal, recoloring), the transformation is applied **at upload time** by passing Cloudinary's generative AI effects directly in `upload_stream` options — so the stored image is already the final result.
 
 ### Video Compression Flow
+<img width="1407" height="768" alt="Gemini_Generated_Image_6er5xd6er5xd6er5" src="https://github.com/user-attachments/assets/d0738361-6be5-4300-bf69-73933e196a07" />
 
-```
-User uploads video + metadata
-      ↓
-POST /api/video-uploadz
-      ↓
-Cloudinary compresses with { quality: "auto", fetch_format: "mp4" }
-Returns compressed bytes and public_id
-      ↓
-Prisma writes Video record to PostgreSQL:
-  { publicId, title, originalSize, compressedSize }
-      ↓
-VideoCard renders:
-  - Thumbnail via getCldImageUrl() (video frame extraction)
-  - Hover preview via getCldVideoUrl() with e_preview transformation
-  - Compression ratio calculated: (1 - compressed/original) × 100
-```
+
+
 
 ---
 
